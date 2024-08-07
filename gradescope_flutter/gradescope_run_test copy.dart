@@ -129,6 +129,7 @@ void main() async {
 
   }
 
+  // Write results to results.json file
   final jsonString = jsonEncode({
     'tests': tests.map((test) => test.toJson()).toList(),
     'leaderboard': [],
@@ -137,10 +138,7 @@ void main() async {
     'score': tests.fold(0.0, (sum, test) => sum + test.score),
   });
   print(jsonString);
-  final file = File('test_results.json'); // Specify the file path
+  final file = File('gradescope_flutter/test_results.json'); // Specify the file path
   file.writeAsString(jsonString, mode: FileMode.write);
 
-  
-  // final testStream = flutterTest();
-  // final testStream = flutterTestByNames(testFiles: ['test/accessibility_contrast_2_test.dart'], testNames: ['min_text_contrast_level']);
 }
