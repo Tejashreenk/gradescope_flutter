@@ -5,7 +5,7 @@ import '../lib/main.dart';
 
 void main() {
   // Checks that tappable nodes have a minimum size of 48 by 48 pixels for Android.
-  testWidgets('min_size_on_tappable_nodes_android', (WidgetTester tester) async {
+  testWidgets('min size_on_tappable_nodes_android', (WidgetTester tester) async {
     final SemanticsHandle handle = tester.ensureSemantics();
     await tester.pumpWidget(const MainApp());
     print("min_size_on_tappable_nodes_android");
