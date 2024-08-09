@@ -6,6 +6,7 @@ import 'test_result.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'test_runner_extension.dart';
 
 Future<List<ConfigTest>> loadConfigTestsFromFile(String filePath) async {
   try {
