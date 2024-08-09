@@ -1,0 +1,43 @@
+{
+  "Tests": [
+    {
+      "rubricElementName": "App Gradescope Test Runner",
+      "testPath": "test/course_tests/accessibility_contrast_2_test.dart",
+      "testName": "ALL",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "points": 3.0,
+      "maxPoints": 9.0,
+      "testType": "accessibility tests",
+      "pointAllocation": "BINARY"
+    },
+    {
+      "rubricElementName": "App Gradescope Test Runner text contrast level",
+      "testPath": "test/course_tests/accessibility_contrast_2_test.dart",
+      "testName": "min_text_contrast_level",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "points": 3.0,
+      "maxPoints": 3.0,
+      "testType": "accessibility tests",
+      "pointAllocation": "BINARY"
+    },
+    {
+      "rubricElementName": "App interface has sufficient contrast",
+      "testPath": "test/course_tests/accessibility_contrast_and_spacing_test.dart",
+      "testName": "ALL",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "points": 3.0,
+      "maxPoints": 12.0,
+      "testType": "accessibility tests",
+      "pointAllocation": "PROPORTIONATE"
+    }
+  ]
+}
