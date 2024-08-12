@@ -50,6 +50,7 @@ void main() async {
 
   for (var configtest in configData){
 
+    // Linter Test
     if (configtest.testName.toLowerCase() == "linter"){
         final result = await Process.run('flutter', ['analyze', '.']);
         var test = GradescopeTest(name: "Linter", score: configtest.points, maxScore: configtest.maxPoints);
@@ -72,7 +73,7 @@ void main() async {
 
     var testStream = flutterTestByNames(testFiles: [configtest.testPath], testNames: [configtest.testName]);
     var final_score = 0.0;
-    GradescopeTest? test = GradescopeTest(name: "None", score: 0.0, maxScore: 0.0);
+    GradescopeTest? test = GradescopeTest(name: configtest.rubricElementName, score: 0.0, maxScore: configtest.maxPoints);
     tests.add(test);
 
     if (configtest.testName == "all"){
@@ -80,18 +81,16 @@ void main() async {
     }
 
     // Set a timeout for the stream
-    final timeout = Duration(seconds: 15); // Adjust the timeout as needed
+    final timeout = Duration(seconds: 60); // Adjust the timeout as needed
     final completer = Completer<void>();
 
     // Listen to the stream and process events
     final subscription = testStream.listen(
       (event) {
         double score = configtest.points;
-        final double maxScore = configtest.maxPoints;
-        GradescopeTest? test;
 
         if (event is TestEventTestStart) {
-            // print('Test started: ${event.test.name}, id: ${event.test.id}');
+            // print('Test started: ${event.test.id} - ${event.test.name}');
 
             // To avoid considering Test events like : 
             // "loading xxx/accessibility_contrast_and_spacing_test.dart"
@@ -99,24 +98,20 @@ void main() async {
               testResults[event.test.id] = GradescopeTest(
                 name: '${configtest.rubricElementName} ${event.test.name}',
                 score: 0.0,
-                maxScore: maxScore,
+                maxScore: configtest.maxPoints,
               );
-              tests.last.name = configtest.rubricElementName;
-              tests.last.maxScore = maxScore;
             }
         } else if (event is TestEventTestDone) {
-          // print('Test ended: ${event.testID}, Result: ${event.result.name}');
+          print('Test ended: ${event.testID}, Result: ${event.result.name}');
 
-          test = testResults[event.testID];
-          if (test != null) {
-            tests.last.status = event.result.name;
-            test.status = event.result.name;
-            if (test.status == "success"){
-              test.score += score;
+          if (testResults[event.testID] != null) {
+            testResults[event.testID]?.status = event.result.name;
+            if (event.result.name == "success"){
+              testResults[event.testID]?.score += score;
               final_score += score;
+              // print('final_score : ${final_score} score: ${testResults[event.testID]?.score}');
+
             }
-            // tests.add(test);
-            testResults[event.testID] = test;
           }
         } else if (event is TestEventDone) {
           print('Test ended: ${tests.last.name} ${event.toString()}');
@@ -130,6 +125,8 @@ void main() async {
             }
           }else if(event.success == true){
               tests.last.score = final_score;
+              tests.last.status = "success";
+
           }
         }
       },
@@ -155,7 +152,6 @@ void main() async {
     // Wait for the stream to complete or timeout
     try {
       await completer.future;
-      // After completion, you can process your results
     } catch (e) {
       print('Failed to process test results: $e');
     }
@@ -170,7 +166,7 @@ void main() async {
     'execution_time': execution_time, // Replace with actual execution time 
     'score': tests.fold(0.0, (sum, test) => sum + test.score),
   });
-  // print(jsonString);
+  print(jsonString);
   final file = File('test/gradescope_flutter/test_results.json'); // Specify the file path
   file.writeAsString(jsonString, mode: FileMode.write);
 

@@ -4,10 +4,7 @@
       "rubricElementName": "Linter Test",
       "testPath": "linter",
       "testName": "linter",
-      "tags": [
-        "a",
-        "b"
-      ],
+      "tags": [],
       "points": 3.0,
       "maxPoints": 3.0,
       "testGroup": "linter",
@@ -17,10 +14,7 @@
       "rubricElementName": "App Gradescope Test Runner",
       "testPath": "test/course_tests/accessibility_contrast_2_test.dart",
       "testName": "all",
-      "tags": [
-        "a",
-        "b"
-      ],
+      "tags": [],
       "points": 3.0,
       "maxPoints": 9.0,
       "testType": "accessibility tests",
@@ -30,10 +24,7 @@
       "rubricElementName": "App Gradescope Test Runner text contrast level",
       "testPath": "test/course_tests/accessibility_contrast_2_test.dart",
       "testName": "min_text_contrast_level",
-      "tags": [
-        "a",
-        "b"
-      ],
+      "tags": [],
       "points": 3.0,
       "maxPoints": 3.0,
       "testType": "accessibility tests",
@@ -43,10 +34,7 @@
       "rubricElementName": "App interface has sufficient contrast",
       "testPath": "test/course_tests/accessibility_contrast_and_spacing_test.dart",
       "testName": "all",
-      "tags": [
-        "a",
-        "b"
-      ],
+      "tags": [],
       "points": 3.0,
       "maxPoints": 12.0,
       "testType": "accessibility tests",
