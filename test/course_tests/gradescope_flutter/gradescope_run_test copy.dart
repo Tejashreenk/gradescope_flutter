@@ -49,9 +49,11 @@ void main() async {
 
   for (var configtest in configData){
     var testStream = flutterTestByNames(testFiles: [configtest.testPath], testNames: [configtest.testName]);
-    var count = 0;
+    var final_score = 0.0;
+    GradescopeTest? test = GradescopeTest(name: "None", score: 0.0, maxScore: 0.0);
+    tests.add(test);
 
-    if (configtest.testName == "ALL"){
+    if (configtest.testName == "all"){
       testStream = flutterTestByNames(testFiles: [configtest.testPath]);
     }
 
@@ -64,17 +66,19 @@ void main() async {
       (event) {
         double score = configtest.points;
         final double maxScore = configtest.maxPoints;
-        final GradescopeTest? test;
+        GradescopeTest? test;
 
         if (event is TestEventTestStart) {
             print('Test started: ${event.test.name}, id: ${event.test.id}');
-            count += 1;
-            testResults[event.test.id] = GradescopeTest(
-              name: configtest.rubricElementName,
-              score: 0.0,
-              maxScore: maxScore,
-            );
-
+            if (event.test.name.contains("loading") != true){
+              testResults[event.test.id] = GradescopeTest(
+                name: '${configtest.rubricElementName} ${event.test.name}',
+                score: 0.0,
+                maxScore: maxScore,
+              );
+              tests.last.name = configtest.rubricElementName;
+              tests.last.maxScore = maxScore;
+            }
         } else if (event is TestEventTestDone) {
           print('Test ended: ${event.testID}, Result: ${event.result.name}');
 
@@ -83,21 +87,23 @@ void main() async {
             test.status = event.result.name;
             if (test.status == "success"){
               test.score += score;
+              final_score += score;
             }
-            tests.add(test);
+            // tests.add(test);
             testResults[event.testID] = test;
-          } else {
-            print('Test result not found for ID: ${event.testID}');
           }
         } else if (event is TestEventDone) {
           print('Test ended: ${event.toString()}');
           completer.complete();
           execution_time += event.time;
-          if (event.success == false && configtest.testName == "ALL" && configtest.pointAllocation == "BINARY"){
-            while(count>0){
-              tests[tests.length-count].score = 0.0;
-              count -= 1;
+          if (event.success == false && configtest.testName == "all"){
+            if(configtest.pointAllocation == "binary"){
+              tests.last.score = 0.0;
+            }else{
+              tests.last.score = final_score;
             }
+          }else if(event.success == true){
+              tests.last.score = final_score;
           }
         }
       },
@@ -138,7 +144,7 @@ void main() async {
     'execution_time': execution_time, // Replace with actual execution time 
     'score': tests.fold(0.0, (sum, test) => sum + test.score),
   });
-  print(jsonString);
+  // print(jsonString);
   final file = File('test/gradescope_flutter/test_results.json'); // Specify the file path
   file.writeAsString(jsonString, mode: FileMode.write);
 

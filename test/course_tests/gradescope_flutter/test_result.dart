@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class GradescopeTest {
-  final String name;
+  String name;
   double score;
-  final double maxScore;
+  double maxScore;
   String status;
-  final String visibility;
+  String visibility;
 
   GradescopeTest({
     required this.name,
