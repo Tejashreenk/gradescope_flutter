@@ -164,7 +164,7 @@ void main() async {
     'tests': tests.map((test) => test.toJson()).toList(),
     'leaderboard': [],
     'visibility': 'visible',
-    'execution_time': execution_time, // Replace with actual execution time 
+    'execution_time': execution_time,  
     'score': tests.fold(0.0, (sum, test) => sum + test.score),
   });
   print(jsonString);
