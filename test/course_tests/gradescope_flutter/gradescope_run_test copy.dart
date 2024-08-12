@@ -102,9 +102,10 @@ void main() async {
               );
             }
         } else if (event is TestEventTestDone) {
-          print('Test ended: ${event.testID}, Result: ${event.result.name}');
 
           if (testResults[event.testID] != null) {
+            print('Test ended: ${event.testID} ${testResults[event.testID].name}, Result: ${event.result.name}');
+
             testResults[event.testID]?.status = event.result.name;
             if (event.result.name == "success"){
               testResults[event.testID]?.score += score;
