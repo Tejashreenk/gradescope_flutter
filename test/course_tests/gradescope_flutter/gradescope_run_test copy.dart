@@ -41,13 +41,35 @@ Future<List<ConfigTest>> loadConfigTestsFromFile(String filePath) async {
 
 void main() async {
 
-  String filePath = 'test/course_tests/gradescope_flutter/config.json';
-  List<ConfigTest> configData = await loadConfigTestsFromFile(filePath);
   var testResults = <int, GradescopeTest>{};
   var tests = <GradescopeTest>[];
   var execution_time = 0;
 
+  String filePath = 'test/course_tests/gradescope_flutter/config.json';
+  List<ConfigTest> configData = await loadConfigTestsFromFile(filePath);
+
   for (var configtest in configData){
+
+    if (configtest.testName.toLowerCase() == "linter"){
+        final result = await Process.run('flutter', ['analyze', '.']);
+        var test = GradescopeTest(name: "Linter", score: configtest.points, maxScore: configtest.maxPoints);
+        print(result.stdout);
+        print(result.stderr);
+
+        if (result.exitCode != 0) {
+          test.score = 0.0;
+          print('Analysis failed with exit code ${result.exitCode}');
+          test.status = "failed";
+
+        } else {
+          print('Analysis completed successfully.');
+          test.status = "success";
+        }
+        testResults[0] = test;
+        tests.add(test);
+        continue;
+    }
+
     var testStream = flutterTestByNames(testFiles: [configtest.testPath], testNames: [configtest.testName]);
     var final_score = 0.0;
     GradescopeTest? test = GradescopeTest(name: "None", score: 0.0, maxScore: 0.0);
@@ -87,6 +109,7 @@ void main() async {
 
           test = testResults[event.testID];
           if (test != null) {
+            tests.last.status = event.result.name;
             test.status = event.result.name;
             if (test.status == "success"){
               test.score += score;
@@ -100,7 +123,7 @@ void main() async {
           completer.complete();
           execution_time += event.time;
           if (event.success == false && configtest.testName == "all"){
-            if(configtest.pointAllocation == "binary"){
+            if(configtest.pointAllocation.toLowerCase() == "binary"){
               tests.last.score = 0.0;
             }else{
               tests.last.score = final_score;

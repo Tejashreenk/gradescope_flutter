@@ -62,7 +62,7 @@ class ConfigTest {
   final List<String>? tags;
   final double points;
   final double maxPoints;
-  final String? testType;
+  final String? testGroup;
   final String pointAllocation;
 
   ConfigTest({
@@ -72,7 +72,7 @@ class ConfigTest {
     this.tags,
     required this.points,
     required this.maxPoints,
-    this.testType,
+    this.testGroup,
     this.pointAllocation = "binary",
   });
 
@@ -84,7 +84,7 @@ class ConfigTest {
       tags: List<String>.from(json['tags']),
       points: json['points'],
       maxPoints: json['maxPoints'],
-      testType: json['testType'],
+      testGroup: json['testGroup'],
       pointAllocation: json['pointAllocation'],
     );
   }
