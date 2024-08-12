@@ -69,7 +69,10 @@ void main() async {
         GradescopeTest? test;
 
         if (event is TestEventTestStart) {
-            print('Test started: ${event.test.name}, id: ${event.test.id}');
+            // print('Test started: ${event.test.name}, id: ${event.test.id}');
+
+            // To avoid considering Test events like : 
+            // "loading xxx/accessibility_contrast_and_spacing_test.dart"
             if (event.test.name.contains("loading") != true){
               testResults[event.test.id] = GradescopeTest(
                 name: '${configtest.rubricElementName} ${event.test.name}',
@@ -80,7 +83,7 @@ void main() async {
               tests.last.maxScore = maxScore;
             }
         } else if (event is TestEventTestDone) {
-          print('Test ended: ${event.testID}, Result: ${event.result.name}');
+          // print('Test ended: ${event.testID}, Result: ${event.result.name}');
 
           test = testResults[event.testID];
           if (test != null) {
@@ -93,7 +96,7 @@ void main() async {
             testResults[event.testID] = test;
           }
         } else if (event is TestEventDone) {
-          print('Test ended: ${event.toString()}');
+          print('Test ended: ${tests.last.name} ${event.toString()}');
           completer.complete();
           execution_time += event.time;
           if (event.success == false && configtest.testName == "all"){
